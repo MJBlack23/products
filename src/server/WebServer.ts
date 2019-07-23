@@ -15,14 +15,20 @@ const startServer = (dataStore: DataCache, port: number = 3000) => {
   }))
 
   router.get('/api/products', async (ctx: Koa.Context) => {
-    ctx.body = await dataStore.getProducts()
+    const { q, start, max } = ctx.query
+
+    if (!q) {
+      ctx.body = await dataStore.getProducts(start, max)
+    } else {
+      ctx.body = await dataStore.searchProducts(q, start, max)
+    }
   })
 
   router.get('/api/products/:id', async (ctx: Koa.Context) => {
     ctx.body = await dataStore.getItemById(ctx.params.id)
   })
 
-  // server.use(router.routes())
+  server.use(router.routes())
 
   server.listen(port)
 

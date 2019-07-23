@@ -36,17 +36,18 @@ export default class DataCache {
   setDataSource = (dataSource: () => Promise<Products>) =>
     this.dataSource = dataSource
 
-  getProducts = async (): Promise<Products> => {
+  getProducts = async (start: number = 0, max: number = 12): Promise<Products> => {
     try {
       if (this.products.length >= 1) {
         return this.products
+          .slice(start, max)
       }
 
       const products = await this.dataSource()
       this.clearCache()
       this.refreshCache(products)
 
-      return products
+      return products.slice(start, max)
     } catch (error) {
       console.error('Error: unable to fetch products...')
       console.error(error.message)
