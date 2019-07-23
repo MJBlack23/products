@@ -1,6 +1,6 @@
-import DataCache from '../DataGeneratorClient'
+import DataCache from '../DataCache'
 
-import { Product, Products } from '../DataGeneratorClient'
+import { Product, Products } from '../DataCache'
 import { expect } from 'chai'
 
 describe('DataGeneratorClient', () => {

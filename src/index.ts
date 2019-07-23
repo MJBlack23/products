@@ -1,21 +1,22 @@
-import * as Koa from 'koa'
-import * as Router from 'koa-router'
+import startServer from './server/WebServer'
+import DataCache from './server/DataCache'
 
-const data = require('./data/product')
+const THIRTY_MINUTES = 1000 * 60 * 30
+
+async function main () {
+  const dataStore = DataCache.create()
+
+  // Get the initial data and cache it
+  await dataStore.getProducts()
+
+  // Update the cache every 30 minutes
+  setInterval(async () => {
+    await dataStore.getProducts()
+  }, THIRTY_MINUTES)
+
+  // Start the server
+  startServer(dataStore)
+}
 
 
-const server = new Koa()
-const router = new Router()
-
-
-
-router.get('/', async (ctx: Koa.Context) => {
-  ctx.body = data
-})
-
-
-server.use(router.routes())
-
-server.listen(3000)
-
-console.log('Server running on port 3000')
+main()
