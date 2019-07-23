@@ -1,6 +1,7 @@
 import * as Koa from 'koa'
 import * as Router from 'koa-router'
 import * as serve from 'koa-static'
+import * as send from 'koa-send'
 import DataCache from './DataCache'
 
 const path = require('path')
@@ -11,7 +12,7 @@ const startServer = (dataStore: DataCache, port: number = 3000) => {
 
   server.use(serve(path.join('public'), {
     gzip: true,
-    index: 'product.html'
+    index: 'index.html'
   }))
 
   router.get('/api/products', async (ctx: Koa.Context) => {
@@ -29,6 +30,10 @@ const startServer = (dataStore: DataCache, port: number = 3000) => {
   })
 
   server.use(router.routes())
+
+  server.use(function* index() {
+    yield send(this, __dirname + '/index.html');
+  })
 
   server.listen(port)
 
