@@ -18,21 +18,31 @@ const startServer = (dataStore: DataCache, port: number = 3000) => {
   router.get('/api/products', async (ctx: Koa.Context) => {
     const { q, start, max } = ctx.query
 
-    if (!q) {
-      ctx.body = await dataStore.getProducts(start, max)
-    } else {
-      ctx.body = await dataStore.searchProducts(q, start, max)
+    try {
+      if (!q) {
+        ctx.body = await dataStore.getProducts(start, max)
+      } else {
+        ctx.body = await dataStore.searchProducts(q, start, max)
+      }
+    } catch (error) {
+      console.error('Error occured:', error.message)
+      ctx.status = 500
     }
   })
 
   router.get('/api/products/:id', async (ctx: Koa.Context) => {
-    ctx.body = await dataStore.getItemById(ctx.params.id)
+    try {
+      ctx.body = await dataStore.getItemById(ctx.params.id)
+    } catch (error) {
+      console.error('Error occured:', error.message)
+      ctx.status = 500
+    }
   })
 
   server.use(router.routes())
 
   server.use(function* index() {
-    yield send(this, __dirname + '/index.html');
+    yield send(this, path.join('public', 'index.html'));
   })
 
   server.listen(port)

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import axios from 'axios'
-import * as noUiSlider from 'nouislider'
+// import * as noUiSlider from 'nouislider'
 import { Products } from '../types'
 
 import Header from '../components/Header'
@@ -23,6 +23,7 @@ interface State {
   sortBy: SortBy
   priceMin: number
   priceMax: number
+  debounceTimer: any
 }
 
 export default class ProductPage extends React.Component<Props, State> {
@@ -33,11 +34,11 @@ export default class ProductPage extends React.Component<Props, State> {
     startIndex: 0,
     sortBy: SortBy.Default,
     priceMin: 0,
-    priceMax: 999999
+    priceMax: 999999,
+    debounceTimer: -1,
   }
 
   handleFilterByPrice = (priceMin: number, priceMax: number) => {
-    console.log(priceMin, priceMax)
     this.setState(() => ({
       ...this.state,
       priceMin,
@@ -100,8 +101,29 @@ export default class ProductPage extends React.Component<Props, State> {
       parseFloat(product.price) <= this.state.priceMax)
 
 
-  handleSearch = (query: String) => {
+  handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.persist()
+    
+    clearTimeout(this.state.debounceTimer)
+    this.setState(() => ({
+      ...this.state,
+      debounceTimer: setTimeout(() => {
+        this.doSearch(e.target.value)
+      }, 500)
+    }))
+  }
 
+  doSearch = (query: string) => {
+    axios.get<Products>(`api/products?q=${query}`)
+      .then(response => {
+        this.setState(() => ({
+          ...this.state,
+          products: response.data
+        }))
+      })
+      .catch(error => {
+        console.log('there was an error fetching products')
+      })
   }
 
   componentDidMount(): void {
@@ -111,34 +133,33 @@ export default class ProductPage extends React.Component<Props, State> {
           ...this.state,
           products: response.data
         }))
-
-        console.log('got some products...', response.data.length)
       })
       .catch(error => {
         console.log('there was an error fetching products')
       })
 
 
-    const filterBar = document.getElementById('filter-bar');
+    // const filterBar = document.getElementById('filter-bar');
 
-    noUiSlider.create(filterBar, {
-      start: [20, 80],
-      connect: true,
-      range: {
-        'min': 0,
-        'max': 100
-      }
-    });
+    // noUiSlider.create(filterBar, {
+    //   start: [0, 100],
+    //   connect: true,
+    //   range: {
+    //     'min': 0,
+    //     'max': 100
+    //   },
+    //   step: 1,
+    // });
 
-    const skipValues = [
-      document.getElementById('value-lower'),
-      document.getElementById('value-upper')
-    ];
+    // const skipValues = [
+    //   document.getElementById('value-lower'),
+    //   document.getElementById('value-upper')
+    // ];
 
-    filterBar.noUiSlider.on('update', function (values, handle) {
-      console.log(handle)
-      skipValues[handle].innerHTML = Math.round(values[handle]).toString()
-    });
+    // filterBar.noUiSlider.on('update', function (values, handle) {
+    //   console.log(values[handle])
+    //   skipValues[handle].innerHTML = Math.round(values[handle]).toString()
+    // });
     
   }
 
@@ -149,7 +170,9 @@ export default class ProductPage extends React.Component<Props, State> {
         <section className="bgwhite p-t-55 p-b-65">
           <div className="container">
             <div className="row">
-              <SideBar />
+              <SideBar 
+                handleSearch={this.handleSearch}
+              />
               <div className="col-sm-6 col-md-8 col-lg-9 p-b-50">
                 <FilterPanel 
                   resultCount={this.state.products.length}
