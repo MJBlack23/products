@@ -7,3 +7,8 @@ dist/
 #generated js
 public/js/app.js
 public/js/app.js.map
+public/js/app.css
+public/js/app.css.map
+
+# compiled JS
+src/**/*.js

@@ -8,8 +8,10 @@
     "dev:server": "ts-node src/index.ts",
     "dev:ui": "parcel watch src/app/index.tsx --out-dir public/js --out-file app.js",
     "dev": "concurrently \"npm:dev:server\" \"npm:dev:ui\"",
-    "build": "typescript src/index.ts",
-    "start": "",
+    "build:server": "tsc src/index.ts",
+    "build:ui": "parcel build src/app/index.tsx --out-dir public/js --out-file app.js",
+    "build": "concurrently \"npm:build:server\" \"npm:build:ui\"",
+    "start": "node src/index.js",
     "test": "mocha -r ts-node/register ./src/**/*.test.ts"
   },
   "keywords": [],
