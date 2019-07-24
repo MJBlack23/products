@@ -1,6 +1,5 @@
 import * as React from 'react'
 import axios from 'axios'
-// import * as noUiSlider from 'nouislider'
 import { Products } from '../types'
 
 import Header from '../components/Header'
@@ -137,29 +136,6 @@ export default class ProductPage extends React.Component<Props, State> {
       .catch(error => {
         console.log('there was an error fetching products')
       })
-
-
-    // const filterBar = document.getElementById('filter-bar');
-
-    // noUiSlider.create(filterBar, {
-    //   start: [0, 100],
-    //   connect: true,
-    //   range: {
-    //     'min': 0,
-    //     'max': 100
-    //   },
-    //   step: 1,
-    // });
-
-    // const skipValues = [
-    //   document.getElementById('value-lower'),
-    //   document.getElementById('value-upper')
-    // ];
-
-    // filterBar.noUiSlider.on('update', function (values, handle) {
-    //   console.log(values[handle])
-    //   skipValues[handle].innerHTML = Math.round(values[handle]).toString()
-    // });
     
   }
 
@@ -179,8 +155,6 @@ export default class ProductPage extends React.Component<Props, State> {
                   handleSortBy={this.handleUpdateSort}
                   filterByPrice={this.handleFilterByPrice}
                 />
-
-                
 
                 <ProductsContainer
                   products={
