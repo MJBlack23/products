@@ -1,15 +1,16 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import { Product } from '../types'
 
 interface Props {
   product: Product
 }
 
-export default (props: Props) => (
+export default ({ product }: Props) => (
   <div className="col-sm-12 col-md-6 col-lg-4 p-b-50">
     <div className="block2">
       <div className="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
-        <img src="images/item-02.jpg" alt="IMG-PRODUCT" />
+        <img src={product.image} alt="IMG-PRODUCT" />
 
         <div className="block2-overlay trans-0-4">
           <a href="#" className="block2-btn-addwishlist hov-pointer trans-0-4">
@@ -26,12 +27,13 @@ export default (props: Props) => (
       </div>
 
       <div className="block2-txt p-t-20">
-        <a href="product-detail.html" className="block2-name dis-block s-text3 p-b-5">
-          Herschel supply co 25l
-        </a>
+        <Link to={product._id} className="block2-name dis-block s-text3 p-b-5">
+          {product.name}
+        </Link>
+        
 
         <span className="block2-price m-text6 p-r-5">
-          $75.00
+          ${product.price}
         </span>
       </div>
     </div>

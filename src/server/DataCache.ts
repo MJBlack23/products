@@ -31,12 +31,12 @@ export default class DataCache {
   private refreshCache = (products: Products) =>
     this.products = products
 
-  private clearCache = () => this.products = DataCache.genEmptyCache()
+  clearCache = () => this.products = DataCache.genEmptyCache()
 
   setDataSource = (dataSource: () => Promise<Products>) =>
     this.dataSource = dataSource
 
-  getProducts = async (start: number = 0, max: number = 12): Promise<Products> => {
+  getProducts = async (start: number = 0, max: number = 30): Promise<Products> => {
     try {
       if (this.products.length >= 1) {
         return this.products
@@ -59,7 +59,7 @@ export default class DataCache {
     this.getProducts()
       .then(products => products.find(product => product._id === id))
 
-  searchProducts = (query: string, start: number = 0, max: number = 11): Promise<Products> =>
+  searchProducts = (query: string, start: number = 0, max: number = 30): Promise<Products> =>
     this.getProducts()
       .then(products => products.filter(product =>
         product.name.toLowerCase().includes(query.toLowerCase()) ||

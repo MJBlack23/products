@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 
-import Product from './ProductPage'
+import Product from './ProductsPage'
 import ProductDetail from './ProductDetail'
 
 export default () => (
